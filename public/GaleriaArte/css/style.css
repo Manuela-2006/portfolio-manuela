@@ -1,0 +1,427 @@
+*, *:hover, *:active, *:focus {
+    cursor:
+    url('../img/cepillo-de-pintura\(3\).png') 3 5,
+    auto !important;
+}
+body {
+    margin: 0;
+    padding: 0;
+}
+/* inicio canvas */
+.draw-section {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 25px;
+    background: #f8f9fa;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.canvas-container {
+    width: 100%;
+    height: 500px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #dee2e6;
+    position: relative;
+}
+
+.controls {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 20px;
+    align-items: center;
+}
+
+.tools-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tool-btn {
+    padding: 12px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tool-btn.active {
+    border-color: #2a9d8f;
+    background: #2a9d8f;
+    color: white;
+}
+
+.color-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.color-palette {
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+    gap: 2px;
+    width: 700px;
+    padding: 8px;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+}
+
+.color-swatch {
+    height: 25px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    border: 1px solid transparent;
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+
+.color-swatch.active {
+    border-color: #333;
+    transform: scale(1.1);
+}
+
+.selected-color {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+}
+
+.opacity-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.clear-btn {
+    padding: 12px 24px;
+    background: #e63946;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+input[type="range"] {
+    width: 120px;
+}
+
+/* final canvas */
+
+header {
+    width: 100%;
+    background: #855951;
+    padding: 15px 0; 
+}
+.titulo{
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    z-index: 3;
+    color: #F0E4CC;
+    max-width: 90%;
+}
+h1{
+    font-size: clamp(14rem, 5vw, 4rem);
+    margin: 0;
+    font-family: "Inspiration", cursive;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    line-height: 100%;
+    letter-spacing: 4px;
+}
+.wrapper {
+    width: 90%;
+    max-width: 1730px;
+    margin: auto;
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+}
+
+.logo {
+    height: 60px; 
+}
+
+.logo img {
+    height: 120%; 
+    width: auto; 
+}
+
+nav {
+    display: flex; 
+    align-items: center;
+}
+
+nav a {
+    color: #F0E4CC;
+    text-decoration: none;
+    padding: 8px 15px;
+    font-size: 29px; 
+    font-weight: bold;
+    margin-left: 10px; 
+    transition: all 0.3s ease; 
+}
+
+nav a:hover {
+    background: #c2b8b6;
+    border-radius: 50px;
+}
+
+.containerVideo {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.fondo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(41, 40, 39, 0.658);
+    z-index: 2;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  .section-title {
+    margin: 2rem 0 1rem;
+    font-size: 1.8rem;
+    color: #222;
+  }
+
+  /* inicio tarjetas */
+  /* Estilos para el carrusel */
+  .carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin: 1rem 0;
+  }
+  .carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+  /* Esconder scrollbar en navegadores Webkit */
+  .carousel::-webkit-scrollbar {
+    display: none;
+  }
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 2;
+  }
+  .carousel-btn.prev {
+    left: 10px;
+  }
+  .carousel-btn.next {
+    right: 10px;
+  }
+  /* Tarjetas de arte con tamaño fijo */
+  .artwork {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-width: 280px;  /* Valor mínimo para el carrusel */
+    max-width: 320px;  /* Puedes ajustar el ancho deseado */
+    height: 500px;     /* Altura fija para toda la tarjeta */
+    display: flex;
+    flex-direction: column;
+  }
+  .artwork:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+  }
+  .artwork img {
+    height: 55%; /* Reducimos porcentaje para la imagen */
+    object-fit: cover;
+    object-position: top center; /* Enfoca la parte superior */
+    flex-shrink: 0;
+}
+  .art-info {
+    padding: 1rem;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem; /* Reducir padding interno */
+    gap: 0.25rem; /* Espacio más ajustado entre elementos */
+}
+  .art-info h3 {
+    color: #222;
+    line-clamp: 1;
+    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+  }
+  .art-info p.artist {
+    font-style: italic;
+    color: #555;
+    margin-bottom: -0.25rem; /* Reducir espacio después del artista */
+    font-size: 0.85rem; /* Tamaño más compacto */
+  }
+  /* La descripción tiene un alto máximo y scroll vertical si excede ese espacio */
+  .art-info p.description {
+    font-size: 0.9rem;
+    color: #666;
+    overflow-y: auto;
+    flex-grow: 1;    /* Ocupa el espacio disponible */
+    height: 60px;   /* Permite que se reduzca según necesidad */
+    line-height: 1.5; /* Mejor legibilidad */
+    padding-right: 0.5rem;
+    line-clamp: unset; /* Eliminar límite de líneas */
+}
+  /* Botón 3D con decoración */
+  .btn-3d {
+    display: inline-block;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+    position: relative;
+    transition: background 0.3s ease;
+    overflow: hidden;
+    font-size: 0.85rem;
+  }
+  .btn-3d:hover {
+    background: #34495e;
+  }
+  .btn-3d::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-top: 25px solid white;
+    border-left: 25px solid transparent;
+  }
+  /* Modal para el visor 3D */
+  .modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .modal-content {
+    position: relative;
+    width: 80%;
+    height: 80%;
+    background-color: #333;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2rem;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1010;
+  }
+  #viewer {
+    width: 100%;
+    height: 100%;
+  }
+  @media (max-width: 768px) {
+    .carousel {
+      gap: 1rem;
+    }
+  }
+
+/* final tarjetas */
+
+/* inicio loader */
+/* Loader styles */
+.loader-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1005;
+  flex-direction: column;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #3498db;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.loader-text {
+  color: white;
+  font-size: 1.2rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error message */
+.error-message {
+  color: #ff4444;
+  display: none;
+  text-align: center;
+  padding: 1rem;
+}
