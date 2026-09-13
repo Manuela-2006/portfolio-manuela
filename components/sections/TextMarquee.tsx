@@ -1,6 +1,7 @@
 "use client";
 
-import useEmblaCarousel from "embla-carousel-react";
+import Marquee from "react-fast-marquee";
+import { useLanguage } from "@/app/context/LanguageContext";
 import { Oswald } from "next/font/google";
 
 const oswald = Oswald({
@@ -8,73 +9,43 @@ const oswald = Oswald({
   weight: "300",
 });
 
-// 🔥 Texto acortado
-const TEXT = "BIENVENIDO A MI PORTFOLIO";
+const items = [
+  "DISEÑO",
+  "DESARROLLO",
+  "FRONTEND",
+  "UI/UX",
+  "PROTOTIPADO",
+  "MAQUETACIÓN",
+  "BRANDING",
+  "CREATIVIDAD",
+  "INNOVACIÓN",
+  "PRECISIÓN",
+  "DETALLE",
+  "FUNCIONALIDAD",
+  "ESTÉTICA",
+  "INTENCIÓN",
+];
+
+const englishItems = [
+  "DESIGN", "DEVELOPMENT", "FRONTEND", "UI/UX", "PROTOTYPING", "LAYOUT",
+  "BRANDING", "CREATIVITY", "INNOVATION", "PRECISION", "DETAIL", "FUNCTIONALITY",
+  "AESTHETICS", "INTENT",
+];
 
 export default function TextMarquee() {
-  const [emblaRef] = useEmblaCarousel({ loop: true, align: "start" });
-
+  const { t } = useLanguage();
   return (
-    <div ref={emblaRef} className="text-marquee-container">
-      <div className="text-marquee-content">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className={`text-marquee-item ${oswald.className}`}>
-            {TEXT}
-            <span className="text-marquee-line" />
-          </div>
-        ))}
-      </div>
-
-      <style jsx>{`
-        .text-marquee-container {
-          width: 100%;
-          margin: 0 auto;
-          overflow: hidden;
-          padding: 35px 0;
-          background: var(--bg-primary);
-          border-top: 2px solid var(--text-primary);
-          border-bottom: 2px solid var(--text-primary);
-          position: relative;
-        }
-
-        .text-marquee-content {
-          display: flex;
-          gap: 80px;
-          white-space: nowrap;
-          animation: marquee 18s linear infinite;
-          align-items: center;
-        }
-
-        .text-marquee-item {
-          display: flex;
-          align-items: center;
-          gap: 40px;
-
-          /* ✔ Mismo estilo que WEB DESIGNER */
-          font-size: 22px;
-          font-weight: 300;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-
-          color: var(--text-primary);
-        }
-
-        .text-marquee-line {
-          width: 60px;
-          height: 1px;
-          background-color: var(--accent-primary);
-          opacity: 0.7;
-        }
-
-        @keyframes marquee {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
-    </div>
+    <Marquee
+      speed={40}
+      gradient={false}
+      className="text-marquee-fast border-y py-3"
+    >
+      {items.map((item, i) => (
+        <span key={i} className={`text-marquee-fast-item ${oswald.className}`}>
+          <span className="text-marquee-fast-label">{t(item, englishItems[i])}</span>
+          <span className="text-marquee-fast-line" aria-hidden="true" />
+        </span>
+      ))}
+    </Marquee>
   );
 }

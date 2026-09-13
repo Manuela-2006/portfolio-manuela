@@ -1,35 +1,48 @@
 "use client";
 
+import { useLayoutEffect, useRef } from "react";
+import { useLanguage } from "@/app/context/LanguageContext";
 import Image from "next/image";
-import { Lato, Hind, Cormorant_Garamond, Dancing_Script } from "next/font/google";
+import { Playfair_Display, Hind, Mrs_Saint_Delafield } from "next/font/google";
 
-const lato = Lato({ subsets: ["latin"], weight: "300" });
+const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "700"] });
 const hind = Hind({ subsets: ["latin"], weight: "400" });
-const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: "500" });
-const signature = Dancing_Script({ subsets: ["latin"], weight: "400" });
+const signature = Mrs_Saint_Delafield({ subsets: ["latin"], weight: "400" });
 
 export default function ContactSection() {
+  const { t } = useLanguage();
+  const contentRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const content = contentRef.current;
+    const footer = content?.closest("footer");
+    if (!content || !footer) return;
+
+    const updateDivider = () => {
+      // offsetTop se mide respecto al footer, que es el ancestro posicionado.
+      content.style.setProperty("--divider-extension", `${content.offsetTop}px`);
+    };
+    updateDivider();
+    const observer = new ResizeObserver(updateDivider);
+    observer.observe(footer);
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="contact-section">
+    <footer className="contact-section">
+      <div className="contact-footer-inner">
       {/* HEADER */}
       <div className="contact-header">
-      <h2
-  className={`${lato.className} about-title`}
-  style={{
-    fontSize: "3rem",
-    fontWeight: 300,
-    marginBottom: "0.5rem",
-    textAlign: "center"
-  }}
->
-  Ponte en contacto
-</h2>
+        <h2 className={`${playfair.className} about-title`}>
+          {t("Ponte en", "Get in")}<br />{t("contacto", "touch")}
+        </h2>
 
         <div
           className="about-subtitle-wrapper"
           style={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "flex-start",
             alignItems: "center",
             gap: "16px",
           }}
@@ -39,24 +52,43 @@ export default function ContactSection() {
             className={`${hind.className} about-subtitle`}
             style={{ textAlign: "center" }}
           >
-            HABLEMOS
+            {t("HABLEMOS", "LET’S TALK")}
           </span>
           <span className="about-line" />
         </div>
       </div>
 
       {/* CONTENIDO PRINCIPAL */}
-      <div className="contact-content">
-        {/* COLUMNA IZQUIERDA (CÍRCULO + FIRMA) */}
-        <div className="contact-signature-wrapper">
-          <div className="contact-signature-circle">
-            <span className={`${signature.className} contact-signature-text`}>
-              Manuela
-            </span>
+      <div className="contact-content" ref={contentRef}>
+        <svg className="contact-divider" aria-hidden="true" focusable="false">
+          <line x1="50%" y1="0" x2="50%" y2="100%"
+            stroke="#8B2F2F" strokeWidth="2"
+            strokeDasharray="14 10" strokeLinecap="round"
+            vectorEffect="non-scaling-stroke" />
+        </svg>
+        <dl className={`${hind.className} contact-details`}>
+          <div>
+            <dt className={`${hind.className} contact-availability-label`}>
+              <Image src="/calendar.svg" alt="" width={20} height={20} />
+              {t("Disponibilidad:", "Availability:")}
+            </dt>
+            <dd>{t("Inmediata", "Immediate")}</dd>
           </div>
-        </div>
-
-        {/* COLUMNA DERECHA */}
+          <div>
+            <dt className={`${hind.className} contact-location-label`}>
+              <Image src="/map.svg" alt="" width={20} height={20} />
+              {t("Ubicación:", "Location:")}
+            </dt>
+            <dd>Cerdanyola del Valles</dd>
+          </div>
+          <div>
+            <dt className={`${hind.className} contact-position-label`}>
+              <Image src="/monitor.svg" alt="" width={20} height={20} />
+              {t("Posición:", "Work arrangement:")}
+            </dt>
+            <dd>{t("Remota", "Remote")}</dd>
+          </div>
+        </dl>
         <div className="contact-card">
           <a
             href="mailto:ruizmanuela2006@gmail.com"
@@ -64,7 +96,7 @@ export default function ContactSection() {
           >
             <Image
               src="/correos.svg"
-              alt="Icono email"
+              alt={t("Icono email", "Email icon")}
               width={40}
               height={40}
             />
@@ -79,12 +111,12 @@ export default function ContactSection() {
           >
             <Image
               src="/Telefono.svg"
-              alt="Icono teléfono"
+              alt={t("Icono teléfono", "Phone icon")}
               width={40}
               height={40}
             />
             <span className={`${hind.className} contact-item-text`}>
-              Teléfono
+              {t("Teléfono", "Phone")}
             </span>
           </a>
 
@@ -96,7 +128,7 @@ export default function ContactSection() {
           >
             <Image
               src="/Linkedin.svg"
-              alt="Icono LinkedIn"
+              alt={t("Icono LinkedIn", "LinkedIn icon")}
               width={40}
               height={40}
             />
@@ -113,16 +145,24 @@ export default function ContactSection() {
 >
   <Image
     src="/CV.svg"
-    alt="Icono descargar CV"
+    alt={t("Icono descargar CV", "Download CV icon")}
     width={40}
     height={40}
   />
   <span className={`${hind.className} contact-item-text`}>
-    Descargar CV
+    {t("Descargar CV", "Download CV")}
   </span>
 </a>
         </div>
       </div>
-    </section>
+      <div className="contact-signoff" aria-label={t("Firma de Manuela", "Manuela’s signature")}>
+        <span className={`${signature.className} contact-signoff-name`} aria-hidden="true">Manuela</span>
+        <svg className="contact-signoff-flourish" viewBox="0 0 180 32" aria-hidden="true">
+          <path d="M 14 20 C 51 10 111 5 156 9 C 174 11 169 16 151 17 C 120 19 74 21 38 24 M 137 6 C 151 2 163 2 171 4"
+            fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+        </svg>
+      </div>
+      </div>
+    </footer>
   );
 }

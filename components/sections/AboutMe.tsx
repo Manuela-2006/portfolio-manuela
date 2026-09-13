@@ -1,18 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useLanguage } from "@/app/context/LanguageContext";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Hind, Cormorant_Garamond } from "next/font/google";
-import { Lato } from "next/font/google";
+import { Hind, Cormorant_Garamond, Playfair_Display } from "next/font/google";
 
-const lato = Lato({
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["300", "400", "700"], 
+  weight: ["400", "500", "700"],
 });
 
-// Registrar el plugin de ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
 
 const hind = Hind({
@@ -25,13 +24,16 @@ const cormorant = Cormorant_Garamond({
   weight: "500",
 });
 
+const aboutText =
+  "Me llamo Manuela y soy de las que se quedan hasta las 3 de la ma\u00F1ana, porque si algo se hace, se hace bien. Empec\u00E9 en la rob\u00F3tica porque mi madre me puso un folleto delante y yo, fiel a mi costumbre de apuntarme a todo, dije que s\u00ED. Esa decisi\u00F3n lo cambi\u00F3 todo. A\u00F1os de gimnasia r\u00EDtmica me ense\u00F1aron que la constancia es la diferencia entre bueno y memorable, los viajes me dieron perspectiva y enfrentarme a lo desconocido me ense\u00F1\u00F3 que la mejor forma de aprender algo es simplemente empezar a hacerlo. Ahora construyo interfaces que no solo funcionan: tienen que verse bien, sentirse bien y tener ese toque de personalidad que las hace \u00FAnicas.";
+
 export default function AboutMe() {
+  const { t } = useLanguage();
   const imageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!imageRef.current) return;
 
-    // Animación inicial de entrada
     gsap.fromTo(
       imageRef.current,
       {
@@ -48,7 +50,6 @@ export default function AboutMe() {
       }
     );
 
-    // Animación al hacer scroll
     gsap.to(imageRef.current, {
       y: -80,
       rotate: -2,
@@ -62,7 +63,6 @@ export default function AboutMe() {
       },
     });
 
-    // Cleanup al desmontar
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
@@ -70,42 +70,34 @@ export default function AboutMe() {
 
   return (
     <section id="about" className="about-section">
-      {/* Columna texto */}
       <div className="about-text">
-      <h2
-  className={`${lato.className} about-title`}
-  style={{
-    fontSize: "3rem",
-    fontWeight: 300,
-    marginBottom: "0.5rem",
-  }}
->
-  Conoce más sobre mí
-</h2>
+        <h2
+          className={`${playfair.className} about-title`}
+          style={{
+            fontSize: "3rem",
+            fontWeight: 300,
+            marginBottom: "0.5rem",
+          }}
+        >
+          {t("MÁS SOBRE MÍ", "MORE ABOUT ME")}
+        </h2>
 
         <div className="about-subtitle-wrapper">
           <span className="about-line" />
-          <span className={`${hind.className} about-subtitle`}>MI HISTORIA</span>
+          <span className={`${hind.className} about-subtitle`}>{t("MI HISTORIA", "MY STORY")}</span>
           <span className="about-line" />
         </div>
 
-        <p className={hind.className + " about-paragraph"}>
-  Soy una persona proactiva y creativa, apasionada por el diseño y el desarrollo web. 
-  Mi experiencia enseñando robótica y programación me ha permitido desarrollar un pensamiento lógico sólido, mientras que mi faceta más artística me impulsa a crear proyectos funcionales, estéticos y centrados en el usuario.
-</p>
-
-<p className={hind.className + " about-paragraph"}>
-  He vivido experiencias internacionales en Estados Unidos y Canadá, lo que fortaleció mi capacidad de adaptación, mi comunicación y mi visión global del mundo digital. 
-  Actualmente estudio Desarrollo de Aplicaciones Web y continúo formándome cada día con el objetivo de convertirme en una desarrolladora capaz de transformar ideas en experiencias digitales intuitivas, limpias y modernas.
-</p>
+        <p className={hind.className + " about-paragraph"}>{t(aboutText,
+          "My name is Manuela, and I’m the kind of person who stays up until 3 a.m., because if something is worth doing, it’s worth doing properly. I first got into robotics when my mother put a leaflet in front of me and, true to my habit of signing up for everything, I said yes. That decision changed everything. Years of rhythmic gymnastics taught me that consistency is what separates the good from the memorable; travelling broadened my perspective, and stepping into the unknown taught me that the best way to learn something is simply to start doing it. I now build interfaces that do more than work: they have to look good, feel right and have that touch of personality that makes them unique."
+        )}</p>
       </div>
 
-      {/* Columna imagen */}
       <div className="about-image-wrapper">
         <div ref={imageRef} className="about-image-inner">
           <Image
-            src="/foto.jpeg"
-            alt="Foto personal"
+            src="/imagen_aboutme.jpeg"
+            alt={t("Foto personal", "Personal photograph")}
             fill
             style={{ objectFit: "cover" }}
           />

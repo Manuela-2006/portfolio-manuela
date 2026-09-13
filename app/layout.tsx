@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import ThemeToggle from "../components/sections/ThemeToggle";
+import { LanguageProvider } from "./context/LanguageContext";
 
 // Fuente ultra fina para el outline estilo Figma
 const montserrat = Montserrat({
@@ -36,6 +37,7 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={montserrat.className}>
+        <LanguageProvider>
         <ThemeProvider>
 
           {/* 🔥 Switch fijo en toda la web */}
@@ -45,6 +47,7 @@ export default function RootLayout({
 
           {children}
         </ThemeProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

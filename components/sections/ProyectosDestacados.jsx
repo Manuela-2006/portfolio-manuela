@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { useLanguage } from "@/app/context/LanguageContext";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Hind, Cormorant_Garamond } from "next/font/google";
+import { Hind, Playfair_Display } from "next/font/google";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,42 +13,51 @@ const hind = Hind({
   weight: "400"
 });
 
-const cormorant = Cormorant_Garamond({
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: "500"
+  weight: ["400", "500", "700"]
 });
 
 export default function ProyectosDestacados() {
+  const { t } = useLanguage();
   const cardsRef = useRef([]);
+  const stackRef = useRef(null);
 
   useEffect(() => {
-    // Animación independiente para cada tarjeta
-    cardsRef.current.forEach((card, i) => {
-      if (!card) return;
+    const stack = stackRef.current;
+    if (!stack) return;
 
-      gsap.fromTo(
-        card,
-        { y: 120, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.1,
-          ease: "power3.out",
-          delay: i * 0.15,
+    const media = gsap.matchMedia();
 
-          scrollTrigger: {
-            trigger: card,
-            start: "top 85%",
-            toggleActions: "play reverse play reverse",
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      const cards = cardsRef.current.filter(Boolean);
+      const timeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: stack,
+          start: "top 90%",
+          end: "top 8%",
+          scrub: 0.45,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Cada tarjeta parte por debajo del area visible del apilado.
+      // Una unica secuencia permite invertir el orden al subir el scroll.
+      cards.forEach((card) => {
+        timeline.fromTo(
+          card,
+          { y: () => stack.offsetHeight + 48 - card.offsetTop },
+          {
+            y: 0,
+            duration: 1,
+            ease: "sine.inOut",
           }
-        }
-      );
+        );
+      });
     });
 
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-      gsap.killTweensOf(cardsRef.current);
-    };
+    // Solo se limpian las animaciones y los triggers de este componente.
+    return () => media.revert();
   }, []);
 
   return (
@@ -56,20 +66,20 @@ export default function ProyectosDestacados() {
       {/* TITULAR + SUBTÍTULO */}
       <div className="proyectos-header">
         <h2
-          className={`${cormorant.className} about-title`}
+          className={`${playfair.className} about-title`}
           style={{
             fontSize: "3rem",
-            fontWeight: 500,
+            fontWeight: 300,
             marginBottom: "0.5rem"
           }}
         >
-          Una selección de mis trabajos
+          {t("ALGUNOS DE MIS TRABAJOS", "A SELECTION OF MY WORK")}
         </h2>
 
         <div className="about-subtitle-wrapper proyectos-subtitle-wrapper">
           <span className="about-line" />
           <span className={`${hind.className} about-subtitle`}>
-            PROYECTOS DESTACADOS
+            {t("PROYECTOS DESTACADOS", "FEATURED PROJECTS")}
           </span>
           <span className="about-line" />
         </div>
@@ -77,7 +87,7 @@ export default function ProyectosDestacados() {
 
       {/* TARJETAS */}
       <div className="proyectos-stack-section">
-        <div className="stack-wrapper">
+        <div className="stack-wrapper" ref={stackRef}>
 
           {/* 🔗 TARJETA GRIS CLICABLE */}
           <a
@@ -94,7 +104,7 @@ export default function ProyectosDestacados() {
 
           {/* TARJETA ROJA */}
           <a
-  href="/GaleriaArte/index.html"
+  href="https://cuento-pinocho.vercel.app/"
   target="_blank"
   rel="noopener noreferrer"
   style={{ display: "block" }}

@@ -8,6 +8,7 @@ import ContactoSection from "@/components/sections/ContactoSection";
 
 export default function Home() {
   return (
+    <>
     <main className="min-h-screen w-full overflow-x-hidden">
       <Hero />
       <TextMarquee />
@@ -15,7 +16,8 @@ export default function Home() {
       <SkillsPedestalScene />   
       <ProyectosDestacados />
       <EducacionSection />
-      <ContactoSection />
     </main>
+    <ContactoSection />
+    </>
   );
 }

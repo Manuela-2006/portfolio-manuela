@@ -1,215 +1,216 @@
 "use client";
 
-import React, { useRef } from "react";
+import { useRef, useState } from "react";
+import { useLanguage } from "@/app/context/LanguageContext";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Text, Billboard } from "@react-three/drei";
-import { Suspense } from "react";
-import { Hind, Cormorant_Garamond } from "next/font/google";
-import { Lato } from "next/font/google";
+import { Hind, Playfair_Display } from "next/font/google";
 
-const lato = Lato({
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["300", "400", "700"], 
+  weight: ["400", "500", "700"],
 });
 
-const hind = Hind({ subsets: ["latin"], weight: "400" });
-const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: "500" });
+const hind = Hind({
+  subsets: ["latin"],
+  weight: "400",
+});
 
-/* ------------------------------------------------------
-   🟤 Skill Ball
------------------------------------------------------- */
-function SkillBall({ position, text }) {
+const categories = [
+  {
+    label: "UX / UI DESIGN",
+    skills: ["Figma", "Adobe XD", "Prototipado", "Wireframing"],
+    indices: [0, 1],
+  },
+  {
+    label: "FRONTEND",
+    skills: ["React", "Next.js", "TypeScript", "Tailwind", "GSAP"],
+    indices: [2, 3, 4],
+  },
+  {
+    label: "BACKEND",
+    skills: ["Node.js", "MySQL", "REST APIs"],
+    indices: [5, 6],
+  },
+  {
+    label: "3D & INTERACTIVE",
+    skills: ["Three.js", "WebGL", "LLMs / IA"],
+    indices: [7, 8],
+  },
+  {
+    label: "TOOLS & OTHERS",
+    skills: ["Git", "GitHub", "WordPress", "shadcn/ui"],
+    indices: [9, 10],
+  },
+];
+
+const sphereData = [
+  { label: "UX/UI", ring: 0, angle: Math.PI * 0.1 },
+  { label: "Figma", ring: 0, angle: Math.PI * 1.1 },
+  { label: "React", ring: 1, angle: Math.PI * 0.3 },
+  { label: "Next.js", ring: 1, angle: Math.PI * 1.0 },
+  { label: "TypeScript", ring: 1, angle: Math.PI * 1.7 },
+  { label: "Node.js", ring: 2, angle: Math.PI * 0.5 },
+  { label: "MySQL", ring: 2, angle: Math.PI * 1.4 },
+  { label: "Three.js", ring: 0, angle: Math.PI * 0.7 },
+  { label: "WebGL", ring: 1, angle: Math.PI * 1.3 },
+  { label: "Git", ring: 2, angle: Math.PI * 0.9 },
+  { label: "WordPress", ring: 2, angle: Math.PI * 1.8 },
+];
+
+const RING_RADII = [1.05, 1.48, 1.9];
+const RING_TILTS = [Math.PI / 5, Math.PI / 3.5, Math.PI / 6];
+const WINE = "#8B2F2F";
+
+function OrbitRing({ radius, tilt, active }) {
   return (
-    <group position={position}>
-      <mesh castShadow receiveShadow>
-        <sphereGeometry args={[0.5, 128, 128]} />
-        <meshPhysicalMaterial
-          color="#1a1a1a"
-          metalness={0.95}
-          roughness={0.05}
-          clearcoat={1}
-          clearcoatRoughness={0}
-          reflectivity={1}
-          envMapIntensity={1.5}
-        />
-      </mesh>
-
-      <pointLight position={[0, 0, 0]} intensity={0.5} distance={2} color="#ffffff" />
-
-      {text && (
-        <Billboard follow>
-          <Text
-            position={[0, 0, 0.52]}
-            fontSize={0.25}
-            color="white"
-            anchorX="center"
-            anchorY="middle"
-            outlineWidth={0.01}
-            outlineColor="#000000"
-          >
-            {text}
-          </Text>
-        </Billboard>
-      )}
-    </group>
+    <mesh rotation={[tilt, 0, 0]}>
+      <torusGeometry args={[radius, active ? 0.012 : 0.007, 8, 120]} />
+      <meshStandardMaterial
+        color={WINE}
+        transparent
+        opacity={active ? 0.7 : 0.25}
+        metalness={0.6}
+        roughness={0.3}
+      />
+    </mesh>
   );
 }
 
-/* ------------------------------------------------------
-   🟤 Pedestal
------------------------------------------------------- */
-function Pedestal() {
-  return (
-    <group>
-      <mesh position={[0, -2.5, 0]}>
-        <cylinderGeometry args={[1.1, 1.3, 0.35, 32]} />
-        <meshStandardMaterial color="#8B2F2F" metalness={0.5} roughness={0.3} />
-      </mesh>
+function SkillSphere({ ring, angle, active, speed = 0.003 }) {
+  const ref = useRef(null);
+  const angleRef = useRef(angle);
+  const radius = RING_RADII[ring];
+  const tilt = RING_TILTS[ring];
 
-      <mesh position={[0, -0.8, 0]}>
-        <cylinderGeometry args={[0.7, 0.9, 3.5, 32]} />
-        <meshStandardMaterial color="#8B2F2F" metalness={0.4} roughness={0.4} />
-      </mesh>
+  useFrame(() => {
+    if (!ref.current) return;
 
-      <group position={[0, 0.5, 0]}>
-        <mesh>
-          <cylinderGeometry args={[1.2, 1.2, 0.18, 32]} />
-          <meshStandardMaterial color="#8B2F2F" metalness={0.6} roughness={0.2} />
-        </mesh>
-      </group>
-
-      <group position={[0, 2.5, 0]}>
-        <mesh>
-          <cylinderGeometry args={[1.2, 1.2, 0.18, 32]} />
-          <meshStandardMaterial color="#8B2F2F" metalness={0.6} roughness={0.2} />
-        </mesh>
-      </group>
-    </group>
-  );
-}
-
-/* ------------------------------------------------------
-   🟤 Orbiting Skills
------------------------------------------------------- */
-function SkillsPedestal() {
-  const groupRef = useRef();
-
-  useFrame((state, delta) => {
-    if (groupRef.current) groupRef.current.rotation.y += delta * 0.25;
+    angleRef.current += speed;
+    const a = angleRef.current;
+    ref.current.position.x = radius * Math.cos(a);
+    ref.current.position.y = radius * Math.sin(a) * Math.cos(tilt);
+    ref.current.position.z = radius * Math.sin(a) * Math.sin(tilt);
   });
 
-  const lowerBalls = [
-    { pos: [2.5, 0.5, 0], text: "HTML" },
-    { pos: [0, 0.5, 2.5], text: "CSS" },
-    { pos: [-2.5, 0.5, 0], text: "JS" },
-    { pos: [0, 0.5, -2.5], text: "React" },
-  ];
-
-  const middleBalls = [
-    { pos: [2, 1.5, 2], text: "Node" },
-    { pos: [-2, 1.5, 2], text: "SQL" },
-    { pos: [2, 1.5, -2], text: "Git" },
-    { pos: [-2, 1.5, -2], text: "PHP" },
-  ];
-
-  const topBall = { pos: [0, 3.2, 0], text: "UX/UI" };
+  const size = ring === 0 ? 0.18 : ring === 1 ? 0.15 : 0.13;
 
   return (
-    <group scale={0.8}>
-      <Pedestal />
+    <mesh ref={ref}>
+      <sphereGeometry args={[size, 32, 32]} />
+      <meshStandardMaterial
+        color={active ? WINE : "#0a0a0a"}
+        metalness={active ? 0.5 : 0.9}
+        roughness={active ? 0.3 : 0.1}
+        emissive={active ? WINE : "#000000"}
+        emissiveIntensity={active ? 0.4 : 0}
+      />
+    </mesh>
+  );
+}
 
-      <group ref={groupRef}>
-        {lowerBalls.map((ball, i) => (
-          <SkillBall key={`lower-${i}`} position={ball.pos} text={ball.text} />
-        ))}
+function Scene({ activeCategory }) {
+  const groupRef = useRef(null);
+  const activeIndices = activeCategory !== null ? categories[activeCategory].indices : [];
+  const activeRings = new Set(activeIndices.map((index) => sphereData[index].ring));
 
-        {middleBalls.map((ball, i) => (
-          <SkillBall key={`middle-${i}`} position={ball.pos} text={ball.text} />
-        ))}
+  useFrame((state) => {
+    if (!groupRef.current) return;
 
-        <SkillBall position={topBall.pos} text={topBall.text} />
-      </group>
+    groupRef.current.rotation.y += 0.003;
+    groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2) * 0.06;
+  });
+
+  return (
+    <group ref={groupRef} scale={0.86}>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[5, 5, 5]} intensity={1.2} />
+      <directionalLight position={[-4, -2, 3]} intensity={0.4} color={WINE} />
+      <pointLight position={[0, 2, 0]} intensity={0.3} color="#ffffff" />
+
+      {RING_RADII.map((radius, index) => (
+        <OrbitRing
+          key={radius}
+          radius={radius}
+          tilt={RING_TILTS[index]}
+          active={activeRings.has(index)}
+        />
+      ))}
+
+      {sphereData.map((sphere, index) => (
+        <SkillSphere
+          key={sphere.label}
+          {...sphere}
+          active={activeIndices.includes(index)}
+          speed={0.002 + index * 0.0003}
+        />
+      ))}
+
     </group>
   );
 }
 
-/* ------------------------------------------------------
-   🟣 FINAL SECTION — CON FONDO F5F5F5
------------------------------------------------------- */
 export default function SkillsPedestalScene() {
-  return (
-    <section
-      className="skills-pedestal-section"
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "130px 40px",
-        flexWrap: "wrap",
-        backgroundColor: "#F5F5F5",
-        gap: "100px", 
-      }}
-    >
-      {/* Canvas IZQUIERDA */}
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "600px",
-          height: "600px",
-          margin: "0 auto",
-          transform: "translateX(80px)",
-        }}
-      >
-        <Canvas
-          camera={{ position: [0, 2, 8], fov: 45 }}
-          gl={{ antialias: true }}
-          style={{ width: "100%", height: "100%" }}
-        >
-          <ambientLight intensity={1.5} />
-          <directionalLight position={[5, 5, 5]} intensity={2} />
-          <directionalLight position={[-5, 5, -5]} intensity={1.5} />
-          <directionalLight position={[0, 5, 5]} intensity={1.5} />
-          <directionalLight position={[0, 5, -5]} intensity={1.5} />
+  const { t } = useLanguage();
+  const [hoverCategory, setHoverCategory] = useState(null);
+  const [openCategory, setOpenCategory] = useState(null);
+  const activeCategory = hoverCategory ?? openCategory;
 
-          <Suspense fallback={null}>
-            <SkillsPedestal />
-          </Suspense>
+  return (
+    <section className="skills-orbit-section">
+      <div className="skills-orbit-canvas" aria-hidden="true">
+        <Canvas camera={{ position: [0, 0.6, 5.8], fov: 42 }}>
+          <Scene activeCategory={activeCategory} />
         </Canvas>
       </div>
 
-      {/* TEXTO DERECHA */}
-      <div
-        className="about-text"
-        style={{ textAlign: "center", width: "100%", maxWidth: "600px", margin: "0 auto" }}
-      >
-        <h2 className={`${lato.className} about-title`}>
-  Mis habilidades
-</h2>
-
-        <div
-  className="about-subtitle-wrapper"
-  style={{
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",   // 👈 ESTA LÍNEA ASEGURA EL CENTRADO
-    gap: "16px",
-    marginBottom: "1.5rem",
-  }}
->
-  <span className="about-line"></span>
-
-  <span className={`about-subtitle ${hind.className}`}>
-    TECNOLOGÍAS
-  </span>
-
-  <span className="about-line"></span>
-</div>
-
-        <p className={hind.className} style={{ fontSize: "1rem", lineHeight: "1.7" }}>
-          Trabajo con tecnologías como HTML, CSS, JavaScript, React y WordPress para crear interfaces sólidas, funcionales y visualmente coherentes, integrando además prácticas de SEO y criterios de optimización. 
-          También tengo experiencia en el desarrollo backend y en el manejo de bases de datos, lo que me permite comprender y trabajar con proyectos de manera más completa. 
-          Destaco por mi capacidad de aprendizaje ágil y por una actitud proactiva ante cualquier nueva herramienta o metodología, manteniendo siempre el interés y la disposición para seguir perfeccionando mis habilidades.
+      <div className="skills-orbit-content">
+        <h2 className={`${playfair.className} about-title skills-orbit-heading`}>
+          {t("MIS HABILIDADES", "MY SKILLS")}
+        </h2>
+        <div className="about-subtitle-wrapper skills-orbit-subtitle">
+          <span className="about-line" />
+          <span className={`${hind.className} about-subtitle`}>{t("SIEMPRE APRENDIENDO", "ALWAYS LEARNING")}</span>
+          <span className="about-line" />
+        </div>
+        <p className={`${hind.className} about-paragraph skills-orbit-intro`}>
+          {t("Un conjunto de herramientas que me permiten transformar ideas en experiencias digitales unicas.",
+            "A set of tools that enables me to turn ideas into distinctive digital experiences.")}
         </p>
+
+        <div className="skills-orbit-accordion">
+          {categories.map((category, index) => (
+            <div key={category.label} className="skills-orbit-category">
+              <button
+                type="button"
+                className="skills-orbit-button"
+                onMouseEnter={() => setHoverCategory(index)}
+                onMouseLeave={() => setHoverCategory(null)}
+                onFocus={() => setHoverCategory(index)}
+                onBlur={() => setHoverCategory(null)}
+                onClick={() => setOpenCategory(openCategory === index ? null : index)}
+                aria-expanded={openCategory === index}
+              >
+                <span className={`${hind.className} skills-orbit-label`}>
+                  <span className="skills-orbit-dot" />
+                  <span>{category.label}</span>
+                </span>
+                <span className="skills-orbit-toggle">{openCategory === index ? "-" : "+"}</span>
+              </button>
+
+              {openCategory === index && (
+                <div className="skills-orbit-tags">
+                  {category.skills.map((skill) => (
+                    <span key={skill} className="skills-orbit-tag">
+                      {skill === "Prototipado" ? t(skill, "Prototyping") : skill === "LLMs / IA" ? t(skill, "LLMs / AI") : skill}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+          <div className="skills-orbit-category" />
+        </div>
+
       </div>
     </section>
   );
