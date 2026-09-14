@@ -2,7 +2,6 @@
 import Image from "next/image";
 import { useRef, type MouseEvent } from "react";
 import { Oswald } from "next/font/google";
-import LanguageSwitcher from "./LanguageSwitcher";
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -45,7 +44,6 @@ export default function Hero() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <LanguageSwitcher />
       {/* Fondo */}
       <Image
         src="/fondo.jpeg"

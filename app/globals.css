@@ -88,63 +88,61 @@ button, a {
 }
 
 .language-switcher {
-  position: absolute;
-  top: 30px;
-  left: 40px;
-  z-index: 30;
-  font-size: 16px;
-  line-height: 1.4;
+  position: relative;
 }
 
 .language-switcher-button {
-  display: flex;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  gap: 10px;
-  min-height: 40px;
-  padding: 8px 14px;
-  border: 1px solid var(--border-color);
-  border-radius: 22px;
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  width: 70px;
+  height: 36px;
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  background: rgba(39, 39, 39, 0.432);
+  backdrop-filter: blur(10px);
+  color: #fff;
   font: inherit;
+  cursor: pointer;
 }
-
-.language-switcher-options {
+.language-switcher-button:hover { background: rgba(39, 39, 39, 0.6); }
+.language-switcher-slider {
   position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  width: 160px;
-  padding: 6px;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  background: var(--bg-primary);
-  box-shadow: 0 8px 24px var(--shadow-color);
+  left: 4px;
+  top: 3px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #8B2F2F;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
 }
-
-.language-switcher-options button {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  min-height: 40px;
-  padding: 8px 10px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--text-primary);
-  text-align: left;
-  font: inherit;
+.language-switcher-button[aria-checked="true"] .language-switcher-slider {
+  transform: translateX(32px);
 }
-
-.language-switcher-options button[aria-pressed="true"] {
-  color: var(--accent-primary);
+.language-switcher-label {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  line-height: 1;
+  text-align: center;
 }
-
-.language-switcher-options button:hover { background: var(--bg-secondary); }
-.language-switcher button:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
-
-@media (max-width: 767px) {
-  .language-switcher { top: 20px; left: 20px; }
+.language-switcher-button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+@media (max-width: 768px) {
+  .language-switcher-button { width: 60px; height: 32px; }
+  .language-switcher-slider { width: 24px; height: 24px; }
+  .language-switcher-button[aria-checked="true"] .language-switcher-slider {
+    transform: translateX(26px);
+  }
+  .language-switcher-label { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .language-switcher-slider { transition: none; }
 }
 
 .hero-main-title {
@@ -1522,7 +1520,7 @@ html[lang="en"] .contact-header .about-title { text-align: center; }
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #000;
+  color: var(--text-primary);
 }
 
 .contact-location-label img,
@@ -1645,6 +1643,10 @@ html[lang="en"] .contact-header .about-title { text-align: center; }
    THEME TOGGLE BUTTON
 -----------------------------------------*/
 .theme-toggle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   position: fixed;
   top: 30px;
   right: 40px;
@@ -1670,7 +1672,6 @@ html[lang="en"] .contact-header .about-title { text-align: center; }
 .theme-toggle-button:hover {
   background: rgba(59, 59, 59, 0.25);
   border-color: rgba(58, 58, 58, 0.685);
-  transform: scale(1.05);
 }
 
 .toggle-slider {
@@ -1755,7 +1756,8 @@ html[lang="en"] .contact-header .about-title { text-align: center; }
 }
 /* ICONOS DE CONTACTSECTION BLANCOS EN MODO DARK */
 :root.dark .contact-card img,
-:root.dark .contact-card svg {
+:root.dark .contact-card svg,
+:root.dark .contact-details dt img {
   filter: brightness(0) invert(1) !important;
 }
 
