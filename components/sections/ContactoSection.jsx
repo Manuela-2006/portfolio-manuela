@@ -11,6 +11,7 @@ const signature = Mrs_Saint_Delafield({ subsets: ["latin"], weight: "400" });
 
 export default function ContactSection() {
   const { t } = useLanguage();
+  const cvFile = t("Curriculum Manuela Ruiz Palma.pdf", "Curriculum ingles Manuela Ruiz Palma .pdf");
   const contentRef = useRef(null);
 
   useLayoutEffect(() => {
@@ -139,8 +140,8 @@ export default function ContactSection() {
 
           {/* NUEVO - DESCARGAR CV */}
           <a
-  href="/Manuela-Ruiz-Palma-CV.pdf"
-  download
+  href={`/${encodeURIComponent(cvFile)}`}
+  download={cvFile}
   className="contact-item"
 >
   <Image
