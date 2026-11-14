@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Hind, Playfair_Display } from "next/font/google";
+import { ArrowUpRight, Figma } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,7 +24,7 @@ export default function ProyectosDestacados() {
   const cardsRef = useRef([]);
   const stackRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const stack = stackRef.current;
     if (!stack) return;
 
@@ -43,7 +44,7 @@ export default function ProyectosDestacados() {
 
       // Cada tarjeta parte por debajo del area visible del apilado.
       // Una unica secuencia permite invertir el orden al subir el scroll.
-      cards.forEach((card) => {
+      cards.slice(0, -1).forEach((card) => {
         timeline.fromTo(
           card,
           { y: () => stack.offsetHeight + 48 - card.offsetTop },
@@ -54,6 +55,27 @@ export default function ProyectosDestacados() {
           }
         );
       });
+
+      // La última tarjeta está más abajo: su entrada debe verse mientras
+      // llega a la pantalla, en lugar de terminar junto a las anteriores.
+      const lastCard = cards[cards.length - 1];
+      if (lastCard) {
+        gsap.fromTo(
+          lastCard,
+          { y: () => stack.offsetHeight + 48 - lastCard.offsetTop },
+          {
+            y: 0,
+            ease: "sine.inOut",
+            scrollTrigger: {
+              trigger: stack,
+              start: () => `top+=${lastCard.offsetTop} 90%`,
+              end: () => `top+=${lastCard.offsetTop} 30%`,
+              scrub: 0.45,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+      }
     });
 
     // Solo se limpian las animaciones y los triggers de este componente.
@@ -128,6 +150,21 @@ export default function ProyectosDestacados() {
   />
 </a>
 
+          <a
+            href="https://www.figma.com/design/yijRX5vBzkIeluGEDUkmNk/Landing-Oc%C3%A9anos-en-peligro?t=PMQGoRvNvnDpa2xT-1"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={t("Ver Océanos en peligro en Figma (se abre en otra pestaña)", "View Oceans in danger in Figma (opens in a new tab)")}
+            style={{ display: "block" }}
+          >
+            <div className="stack-card card-figma" ref={(el) => (cardsRef.current[3] = el)}>
+              <span className={`${hind.className} card-figma-label`}><Figma size={20} aria-hidden="true" /> FIGMA</span>
+              <h3 className={`${playfair.className} card-figma-title`}>{t("Océanos en peligro", "Oceans in danger")}</h3>
+              <span className={`${hind.className} card-figma-link`}>
+                {t("Ver diseño", "View design")} <ArrowUpRight size={22} aria-hidden="true" />
+              </span>
+            </div>
+          </a>
         </div>
       </div>
 

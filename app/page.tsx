@@ -3,8 +3,7 @@ import TextMarquee from "@/components/sections/TextMarquee";
 import AboutMe from "@/components/sections/AboutMe";
 import SkillsPedestalScene from "@/components/skills/SkillsPedestal";
 import ProyectosDestacados from "@/components/sections/ProyectosDestacados";
-import EducacionSection from "@/components/sections/EducacionSection";
-import ContactoSection from "@/components/sections/ContactoSection";
+import EducationContactJourney from "@/components/sections/EducationContactJourney";
 
 export default function Home() {
   return (
@@ -15,9 +14,8 @@ export default function Home() {
       <AboutMe />
       <SkillsPedestalScene />   
       <ProyectosDestacados />
-      <EducacionSection />
+      <EducationContactJourney />
     </main>
-    <ContactoSection />
     </>
   );
 }

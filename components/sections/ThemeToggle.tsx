@@ -51,7 +51,10 @@ function ThemeToggleClient() {
 
   return (
     <button
-      onClick={toggleTheme}
+      onClick={(event) => {
+        const bounds = event.currentTarget.getBoundingClientRect();
+        toggleTheme({ x: bounds.left + bounds.width / 2, y: bounds.top + bounds.height / 2 });
+      }}
       className="theme-toggle-button"
       aria-label="Toggle theme"
     >

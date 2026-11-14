@@ -1,0 +1,21 @@
+.journey { position: relative; }
+.route {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  z-index: 2;
+  pointer-events: none;
+}
+.ball, .trail { fill: var(--accent-primary, #8b2f2f); visibility: hidden; }
+.ball { filter: drop-shadow(0 0 5px rgba(139, 47, 47, 0.6)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ball { filter: none; }
+  .trail { display: none; }
+}
+
+@media (max-width: 480px) {
+  .ball, .trail { display: none; }
+}

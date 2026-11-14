@@ -1,6 +1,5 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
 import { useLanguage } from "@/app/context/LanguageContext";
 import Image from "next/image";
 import { Playfair_Display, Hind, Mrs_Saint_Delafield } from "next/font/google";
@@ -12,23 +11,6 @@ const signature = Mrs_Saint_Delafield({ subsets: ["latin"], weight: "400" });
 export default function ContactSection() {
   const { t } = useLanguage();
   const cvFile = t("Curriculum Manuela Ruiz Palma.pdf", "Curriculum ingles Manuela Ruiz Palma .pdf");
-  const contentRef = useRef(null);
-
-  useLayoutEffect(() => {
-    const content = contentRef.current;
-    const footer = content?.closest("footer");
-    if (!content || !footer) return;
-
-    const updateDivider = () => {
-      // offsetTop se mide respecto al footer, que es el ancestro posicionado.
-      content.style.setProperty("--divider-extension", `${content.offsetTop}px`);
-    };
-    updateDivider();
-    const observer = new ResizeObserver(updateDivider);
-    observer.observe(footer);
-    observer.observe(content);
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <footer className="contact-section">
@@ -60,13 +42,7 @@ export default function ContactSection() {
       </div>
 
       {/* CONTENIDO PRINCIPAL */}
-      <div className="contact-content" ref={contentRef}>
-        <svg className="contact-divider" aria-hidden="true" focusable="false">
-          <line x1="50%" y1="0" x2="50%" y2="100%"
-            stroke="#8B2F2F" strokeWidth="2"
-            strokeDasharray="14 10" strokeLinecap="round"
-            vectorEffect="non-scaling-stroke" />
-        </svg>
+      <div className="contact-content">
         <dl className={`${hind.className} contact-details`}>
           <div>
             <dt className={`${hind.className} contact-availability-label`}>

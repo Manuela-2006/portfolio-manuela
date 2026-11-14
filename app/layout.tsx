@@ -4,8 +4,6 @@ import { Hind } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
-import ThemeToggle from "../components/sections/ThemeToggle";
-import LanguageSwitcher from "../components/sections/LanguageSwitcher";
 import { LanguageProvider } from "./context/LanguageContext";
 
 // Fuente ultra fina para el outline estilo Figma
@@ -42,10 +40,6 @@ export default function RootLayout({
         <ThemeProvider>
 
           {/* 🔥 Switch fijo en toda la web */}
-          <div className="theme-toggle-container">
-            <ThemeToggle />
-            <LanguageSwitcher />
-          </div>
 
           {children}
         </ThemeProvider>
